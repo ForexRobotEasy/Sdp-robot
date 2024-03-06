@@ -1,0 +1,130 @@
+
+// Program: SDP Robot
+// Developer: Forex Robot Easy Team
+// Developer's site: forexroboteasy.com
+
+// Import necessary libraries and modules
+
+#include <Trade\Trade.mqh>
+#include <Math\Math.mqh>
+#include <Array\ArrayObj.mqh>
+
+// Define global variables
+
+int dailyTimeFrame = PERIOD_D1;
+int weeklyTimeFrame = PERIOD_W1;
+int monthlyTimeFrame = PERIOD_MN1;
+
+// Define support and resistance level identification and analysis functions
+
+double CalculateSupportLevel(string symbol, ENUM_TIMEFRAMES timeframe) {
+    // Calculate support level for the given symbol and timeframe
+    // Implementation logic goes here
+}
+
+double CalculateResistanceLevel(string symbol, ENUM_TIMEFRAMES timeframe) {
+    // Calculate resistance level for the given symbol and timeframe
+    // Implementation logic goes here
+}
+
+// Define functions for executing trades based on support and resistance levels
+
+void ExecuteBuyTrade(string symbol, double price, double stopLoss, double takeProfit) {
+    // Execute a buy trade for the given symbol at the specified price
+    // with the provided stop loss and take profit levels
+    // Implementation logic goes here
+}
+
+void ExecuteSellTrade(string symbol, double price, double stopLoss, double takeProfit) {
+    // Execute a sell trade for the given symbol at the specified price
+    // with the provided stop loss and take profit levels
+    // Implementation logic goes here
+}
+
+// Define functions to calculate risk and position size for each trade
+
+double CalculateRisk(string symbol, double entryPrice, double stopLoss) {
+    // Calculate the risk for the given symbol based on the entry price and stop loss level
+    // Implementation logic goes here
+}
+
+double CalculatePositionSize(string symbol, double risk, double accountBalance) {
+    // Calculate the position size for the given symbol based on the risk and account balance
+    // Implementation logic goes here
+}
+
+// Define functions for trade management, including stop loss and take profit levels
+
+void SetStopLoss(string symbol, int ticket, double stopLoss) {
+    // Set the stop loss level for the given trade ticket and symbol
+    // Implementation logic goes here
+}
+
+void SetTakeProfit(string symbol, int ticket, double takeProfit) {
+    // Set the take profit level for the given trade ticket and symbol
+    // Implementation logic goes here
+}
+
+// Define features for trade monitoring and automatic trade closure
+
+void MonitorTrades() {
+    // Monitor open trades and close them based on pre-defined conditions
+    // Implementation logic goes here
+}
+
+// Main function to implement the SDP Robot algorithm
+
+void OnTick() {
+    if (IsNewsTime()) {
+        // Disable the robot during news times
+        return;
+    }
+    
+    string[] symbols = GetSymbols();
+    
+    for (int i = 0; i < ArraySize(symbols); i++) {
+        string symbol = symbols[i];
+        
+        // Calculate support and resistance levels for different time frames
+        double weeklySupport = CalculateSupportLevel(symbol, weeklyTimeFrame);
+        double weeklyResistance = CalculateResistanceLevel(symbol, weeklyTimeFrame);
+        double dailySupport = CalculateSupportLevel(symbol, dailyTimeFrame);
+        double dailyResistance = CalculateResistanceLevel(symbol, dailyTimeFrame);
+        
+        // Execute trades based on the identified support and resistance levels
+        if (Bid > weeklyResistance) {
+            double stopLoss = weeklySupport;
+            double takeProfit = weeklyResistance + (weeklyResistance - weeklySupport);
+            ExecuteBuyTrade(symbol, Ask, stopLoss, takeProfit);
+        }
+        
+        if (Ask < weeklySupport) {
+            double stopLoss = weeklyResistance;
+            double takeProfit = weeklySupport - (weeklyResistance - weeklySupport);
+            ExecuteSellTrade(symbol, Bid, stopLoss, takeProfit);
+        }
+        
+        if (Bid > dailyResistance) {
+            double stopLoss = dailySupport;
+            double takeProfit = dailyResistance + (dailyResistance - dailySupport);
+            ExecuteBuyTrade(symbol, Ask, stopLoss, takeProfit);
+        }
+        
+        if (Ask < dailySupport) {
+            double stopLoss = dailyResistance;
+            double takeProfit = dailySupport - (dailyResistance - dailySupport);
+            ExecuteSellTrade(symbol, Bid, stopLoss, takeProfit);
+        }
+    }
+    
+    // Calculate risk and position size for each trade
+    double risk = CalculateRisk(symbol, entryPrice, stopLoss);
+    double positionSize = CalculatePositionSize(symbol, risk, accountBalance);
+    
+    // Set stop loss and take profit levels for each trade
+    SetStopLoss(symbol, ticket, stopLoss);
+    SetTakeProfit(symbol, ticket, takeProfit);
+    
+    // Monitor and close trades based on pre-defined conditions
+    MonitorTrades();
+}
